@@ -6,7 +6,7 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 # Create and set working directory
-WORKDIR /app
+WORKDIR /UK_MEDICAL_BOT
 
 # Install OS dependencies
 RUN apt-get update && apt-get install -y \

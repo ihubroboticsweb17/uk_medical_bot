@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   asgi:
     build: .
@@ -80,105 +78,11 @@ services:
       - "8080:80"
       - "443:443"
     volumes:
-      - ./docker/nginx/conf.d:/etc/nginx/conf.d
       - ./docker/nginx/ssl:/etc/nginx/ssl
+      - ./docker/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
       - asgi
     restart: unless-stopped
 
 volumes:
   pgdata:
-
-
-
-# # version: '3.9'
-
-# services:
-#   asgi:
-#     build: .
-#     entrypoint: ["./entrypoint.sh"]
-#     command: ["uvicorn", "uk_medical_bot.asgi:application", "--host", "0.0.0.0", "--port", "8000"]
-#     ports:
-#       - "8000:8000"
-#     volumes:
-#       - .:/app
-#     environment:
-#       DJANGO_SETTINGS_MODULE: uk_medical_bot.settings
-#       RUN_MIGRATIONS: "false"
-#     depends_on:
-#       - redis
-#       - postgres
-#     restart: unless-stopped
-
-#   redis:
-#     image: redis:7
-#     restart: unless-stopped
-
-#   postgres:
-#     image: postgres:15
-#     environment:
-#       POSTGRES_USER: uk_user
-#       POSTGRES_PASSWORD: uk_pass
-#       POSTGRES_DB: uk_db
-#     volumes:
-#       - pgdata:/var/lib/postgresql/data
-#     ports:
-#       - "5432:5432"
-#     restart: unless-stopped
-
-#   celery:
-#     build: .
-#     entrypoint: ["./entrypoint.sh"]
-#     command: ["celery", "-A", "uk_medical_bot", "worker", "--loglevel=info", "--hostname=worker1@%h", "--events"]
-#     volumes:
-#       - .:/app
-#     environment:
-#       - DJANGO_SETTINGS_MODULE=uk_medical_bot.settings
-#       - CELERY_BROKER_URL=redis://redis:6379/0
-#     depends_on:
-#       - redis
-#       - postgres
-#     restart: unless-stopped
-
-#   beat:
-#     build: .
-#     entrypoint: ["./entrypoint.sh"]
-#     command: ["celery", "-A", "uk_medical_bot", "beat", "--loglevel=info", "--scheduler", "django_celery_beat.schedulers:DatabaseScheduler"]
-#     volumes:
-#       - .:/app
-#     environment:
-#       - DJANGO_SETTINGS_MODULE=uk_medical_bot.settings
-#       - CELERY_BROKER_URL=redis://redis:6379/0
-#     depends_on:
-#       - redis
-#       - postgres
-#     restart: unless-stopped
-
-#   flower:
-#     build: .
-#     command: ["celery", "-A", "uk_medical_bot", "flower", "--port=5555"]
-#     ports:
-#       - "5555:5555"
-#     environment:
-#       - CELERY_BROKER_URL=redis://redis:6379/0
-#     depends_on:
-#       - redis
-#       - celery
-#     restart: unless-stopped
-
-#   nginx:
-#     image: nginx:latest
-#     ports:
-#       - "8080:80"
-#       - "443:443"
-#     volumes:
-#       - ./docker/nginx/conf.d:/etc/nginx/conf.d
-#       - ./docker/nginx/ssl:/etc/nginx/ssl
-#     depends_on:
-#       - asgi
-#       - flower
-#     restart: unless-stopped
-
-# volumes:
-#   pgdata:
-
