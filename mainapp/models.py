@@ -60,3 +60,4 @@ class Patient(models.Model):
 # docker compose run --rm beat python manage.py makemigrations
 # docker compose run --rm beat python manage.py makemigrations --empty mainapp
 # docker compose run --rm beat python manage.py migrate
+# docker compose run --rm beat python manage.py makemigrations

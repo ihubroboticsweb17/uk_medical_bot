@@ -183,7 +183,12 @@ def create_or_update_patient_data(request):
             operation = "created"
 
         if serializer.is_valid():
-            serializer.save(is_active=True)
+            updated_instance = serializer.save(is_active=True)
+            if patient_id:
+                updated_instance.updated_by = request.user
+            else:
+                updated_instance.created_by = request.user
+            updated_instance.save() 
             return Response({
                 'status': 'success',
                 'message': f"Patient {operation} successfully.",
@@ -215,7 +220,7 @@ def view_all_patient(request):
                 'data': None
             }, status=status.HTTP_403_FORBIDDEN)
 
-        users = Patient.objects.all()
+        users = Patient.objects.all().order_by('-created_at')
         serializer = PatientSerializer(users, many=True)
         return Response({
             'status': 'success',
@@ -251,7 +256,12 @@ def soft_delete_patient(request, patient_id):
             }, status=status.HTTP_404_NOT_FOUND)
 
         user_instance.is_active = not user_instance.is_active
-        user_instance.save()
+        updated_instance = user_instance.save()
+        if patient_id:
+            updated_instance.updated_by = request.user
+        else:
+            updated_instance.created_by = request.user
+        updated_instance.save() 
         action = 'activated' if user_instance.is_active else 'deactivated'
         return Response({
             'status': 'success',

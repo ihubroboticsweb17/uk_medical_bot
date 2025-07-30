@@ -70,9 +70,6 @@ class HealthcareUserSerializer(serializers.ModelSerializer):
         return user
 
 class PatientSerializer(serializers.ModelSerializer):
-    created_by = serializers.StringRelatedField(read_only=True)
-    updated_by = serializers.StringRelatedField(read_only=True)
-
     class Meta:
         model = Patient
         fields = [
