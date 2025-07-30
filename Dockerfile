@@ -20,6 +20,10 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Copy entrypoint and wait-for-postgres scripts
+COPY entrypoint.sh wait-for-postgres.sh ./
+RUN chmod +x entrypoint.sh wait-for-postgres.sh
+
 # Copy entrypoint and make executable
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh

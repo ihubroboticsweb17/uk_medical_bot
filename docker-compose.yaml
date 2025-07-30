@@ -51,7 +51,7 @@ services:
     entrypoint: ["./entrypoint.sh"]
     command: ["celery", "-A", "uk_medical_bot", "beat", "--loglevel=info", "--scheduler", "django_celery_beat.schedulers:DatabaseScheduler"]
     volumes:
-      - .:/app
+      - .:/UK_MEDICAL_BOT
     environment:
       DJANGO_SETTINGS_MODULE: uk_medical_bot.settings
       CELERY_BROKER_URL: redis://redis:6379/0
