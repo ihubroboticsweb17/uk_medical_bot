@@ -25,5 +25,6 @@ def health_check(request):
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('main/',include('mainapp.urls'))
+    path('main/',include('mainapp.urls')),
+    path('privilege/',include('privilagecontroller.urls'))
 ]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

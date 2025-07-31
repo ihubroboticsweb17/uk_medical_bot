@@ -13,8 +13,13 @@ from asgiref.sync import sync_to_async
 from .models import HealthcareUser, Patient
 from .serializers import HealthcareUserSerializer, PatientSerializer, LoginSerializer
 import logging
+from privilagecontroller.views import hasFeatureAccess
 logger = logging.getLogger(__name__)
 
+# if not has_feature_access(request.user, 'view_admin_panel'):
+#         return Response({'detail': 'Access Denied'}, status=403)
+
+# Login function
 @api_view(['POST'])
 @authentication_classes([])  # Disable CSRF-related auth mechanisms
 @permission_classes([])  
@@ -33,6 +38,7 @@ def login_view(request):
         "message": first_error
     }, status=status.HTTP_400_BAD_REQUEST)
 
+# Admin/Nurse functions
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_or_update_admin_data(request):
@@ -151,13 +157,20 @@ def soft_delete_admin_user(request, user_id):
 
 
 
-
+# Patient functions
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_or_update_patient_data(request):
     print("Raw request data:", request.data)
     try:
         if request.user.role not in ['admin', 'nurse']:
+            return Response({
+                'status': 'error',
+                'message': 'Permission denied.',
+                'data': None
+            }, status=status.HTTP_403_FORBIDDEN)
+        
+        if not hasFeatureAccess(request.user, 'patient_data_handling_crud'):
             return Response({
                 'status': 'error',
                 'message': 'Permission denied.',
@@ -219,6 +232,13 @@ def view_all_patient(request):
                 'message': 'Permission denied.',
                 'data': None
             }, status=status.HTTP_403_FORBIDDEN)
+        
+        if not hasFeatureAccess(request.user, 'patient_data_handling_crud'):
+            return Response({
+                'status': 'error',
+                'message': 'Permission denied.',
+                'data': None
+            }, status=status.HTTP_403_FORBIDDEN)
 
         users = Patient.objects.all().order_by('-created_at')
         serializer = PatientSerializer(users, many=True)
@@ -241,6 +261,13 @@ def view_all_patient(request):
 def soft_delete_patient(request, patient_id):
     try:
         if request.user.role not in ['admin', 'nurse']:
+            return Response({
+                'status': 'error',
+                'message': 'Permission denied.',
+                'data': None
+            }, status=status.HTTP_403_FORBIDDEN)
+        
+        if not hasFeatureAccess(request.user, 'patient_data_handling_crud'):
             return Response({
                 'status': 'error',
                 'message': 'Permission denied.',
