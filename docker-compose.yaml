@@ -7,6 +7,7 @@ services:
       - "8000:8000"
     volumes:
       - .:/app
+      - ./logs:/UK_MEDICAL_BOT/logs
     environment:
       DJANGO_SETTINGS_MODULE: uk_medical_bot.settings
       RUN_MIGRATIONS: "false"

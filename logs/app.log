@@ -1,0 +1,7 @@
+[2025-07-31 11:11:25,753] ERROR privilagecontroller.views - Exception in create_or_update_privilege: 'str' object has no attribute 'shdshdjjs'
+Traceback (most recent call last):
+  File "/UK_MEDICAL_BOT/privilagecontroller/views.py", line 60, in create_or_update_privilege
+    if request.user.role.shdshdjjs not in ['admin']:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'shdshdjjs'
+[2025-07-31 11:11:25,754] ERROR django.request - Internal Server Error: /privilege/create-privilege/
