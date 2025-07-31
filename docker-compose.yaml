@@ -2,7 +2,7 @@ services:
   asgi:
     build: .
     entrypoint: ["./entrypoint.sh"]
-    command: ["uvicorn", "uk_medical_bot.asgi:application", "--host", "0.0.0.0", "--port", "8000"]
+    command: ["uvicorn", "uk_medical_bot.asgi:application", "--host", "0.0.0.0", "--port", "8000", "--reload"]
     ports:
       - "8000:8000"
     volumes:
@@ -15,6 +15,7 @@ services:
       - redis
       - postgres
     restart: unless-stopped
+    working_dir: /app
 
   redis:
     image: redis:7
@@ -52,15 +53,16 @@ services:
     entrypoint: ["./entrypoint.sh"]
     command: ["celery", "-A", "uk_medical_bot", "beat", "--loglevel=info", "--scheduler", "django_celery_beat.schedulers:DatabaseScheduler"]
     volumes:
-      - .:/UK_MEDICAL_BOT
+      - .:/app
     environment:
       DJANGO_SETTINGS_MODULE: uk_medical_bot.settings
       CELERY_BROKER_URL: redis://redis:6379/0
-      RUN_MIGRATIONS: "true"  # 👈 Only beat runs migrations
+      RUN_MIGRATIONS: "true"
     depends_on:
       - redis
       - postgres
     restart: unless-stopped
+    working_dir: /app
 
   flower:
     build: .
