@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_celery_beat',
     'mainapp',
-    'privilagecontroller'
+    'privilagecontroller',
+    'bed_data'
 ]
 
 MIDDLEWARE = [
